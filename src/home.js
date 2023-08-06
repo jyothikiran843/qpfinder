@@ -41,8 +41,10 @@ export default function Home(){
       if(cook.indexOf('user') !== -1 ) {
         // && cook.indexOf('role')!==-1
         setUser(((cook).split(';')[2]).split('=')[1]);
-        setRole(((cook).split(';')[1]).split('=')[1]);
-        return true;
+        if(cook.indexOf('role')!==-1){
+          setRole(((cook).split(';')[1]).split('=')[1]);
+          return true;
+        }
       }
       return false;
     }
