@@ -2,7 +2,8 @@ import { useState,useEffect,createContext } from "react";
 import { Button } from "react-bootstrap";
 import SignUpModal from "./signup";
 import Upload from "./upload";
-
+// import Data from "./data";
+import Data from "./new_data";
 const UserContextEmail=createContext();
 
 export default function Home(){
@@ -20,6 +21,8 @@ export default function Home(){
         console.log(data);
         if(data.result){
           setShowModal(false);
+          document.cookie="user="+data.email+" ;";
+          document.cookie="role="+data.role+" ;";
           window.location.href = "http://localhost:3000";
         }
         else{
@@ -37,7 +40,7 @@ export default function Home(){
       var cook = document.cookie;
       if(cook.indexOf('user') !== -1 ) {
         // && cook.indexOf('role')!==-1
-        setUser(((cook).split(';')[0]).split('=')[1]);
+        setUser(((cook).split(';')[2]).split('=')[1]);
         setRole(((cook).split(';')[1]).split('=')[1]);
         return true;
       }
@@ -107,8 +110,9 @@ export default function Home(){
           {user ==='' && <Button className='btn btn-primary' onClick={signIn}>SignUp</Button>}
           {user==='' && <Button onClick={signIn}>SignIn</Button>}
           {user!=='' && <Button onClick={signOut}>SignOut</Button>}
-          {showModal && <SignUpModal props={{'email':'Nothing'}}/>}
+          {showModal && <SignUpModal/>}
           {user!=='' && <Upload/>}
+          <Data/>
 
         </UserContextEmail.Provider>
       </>

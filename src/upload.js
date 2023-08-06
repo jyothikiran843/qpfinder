@@ -9,7 +9,9 @@ export default function Upload(){
     const [subject,setSubject]=useState('all');
     const [type,setType]=useState('all');
     // const [time,setTime]=useState('');
-    const [sem,setSem]=useState('');
+    const [sem,setSem]=useState('all');
+    var uname=((document.cookie).split(';')[0]).split('=')[1];
+    var role=((document.cookie).split(';')[1]).split('=')[1];
 
     function submitData(){
         const formData = new FormData();
@@ -19,6 +21,8 @@ export default function Upload(){
         formData.append('type', type);
         formData.append('sem', sem);
         formData.append('file', document.getElementById('file_uploaded').files[0]);
+        formData.append('uname',uname);
+        formData.append('role',role);
 
         fetch('http://127.0.0.1:3790/upload', {
         method: 'POST',
@@ -71,6 +75,15 @@ export default function Upload(){
                         <Form.Group className="mb-3" >
                             <Form.Label>Type</Form.Label>
                             <Form.Select as="select" placeholder="Other" value={type} onChange={(e)=>setType(e.target.value)}>
+                                <option value='all'>All</option>
+                                <option value='1'>Curriculum</option>
+                                <option value='2'>Competitive</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" >
+                            <Form.Label>Sem</Form.Label>
+                            <Form.Select as="select" placeholder="Other" value={sem} onChange={(e)=>setSem(e.target.value)}>
                                 <option value='all'>All</option>
                                 <option value='1'>Sem-1</option>
                                 <option value='2'>Sem-2</option>

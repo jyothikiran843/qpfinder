@@ -18,10 +18,14 @@ export default function SignUpModal(){
             var coo=document.cookie;
             const keyValuePairs = coo.split(';');
             const userKeyValuePair = keyValuePairs.find((pair) => pair.trim().startsWith('user='));
+            const roleKeyValuePair = keyValuePairs.find((pair) => pair.trim().startsWith('role='));
             if (userKeyValuePair) {
               const userValue = userKeyValuePair.split('=')[1].trim();
+              const roleValue = roleKeyValuePair.split('=')[1].trim();
               setUname(userValue);
-            } else {
+              setUserType(roleValue);
+            }
+            else {
               setUname('');
             }
         }
@@ -52,6 +56,8 @@ export default function SignUpModal(){
                 alert('Username Not Available');
             }
             else if(data.result){
+                document.cookie="user="+uname+" ;";
+                document.cookie="role="+userType+" ;";
                 alert("Successfully Updated Your details");
                 setShow(false);
             }
@@ -97,9 +103,6 @@ export default function SignUpModal(){
                             <Form.Label>Organization Name</Form.Label>
                             <Form.Control type="text" value={organizationName} placeholder="Enter your institute name" onChange={(e) => setOrganizationName(e.target.value)} />
                         </Form.Group>
-
-
-
 
                         <Button variant="primary" type="submit" onClick={addData}>
                             Submit
