@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import {Form} from "react-bootstrap";
-import { useContext } from "react";
-import UserContextEmail from './home';
 
 
 export default function SignUpModal(){

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import DisplayData from "./display_data";
 const UserFilters=createContext();
 export default function Data(){

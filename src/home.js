@@ -2,9 +2,10 @@ import { useState,useEffect,createContext } from "react";
 import { Button } from "react-bootstrap";
 import SignUpModal from "./signup";
 import Upload from "./upload";
-// import Data from "./data";
 import Data from "./new_data";
+import {Navbar, Nav, Container } from 'react-bootstrap';
 const UserContextEmail=createContext();
+
 
 export default function Home(){
   const [user,setUser]=useState('');
@@ -12,17 +13,18 @@ export default function Home(){
   const client_id = '297636216905-t14s0edbqojfp5lph7g9vtq2m01l7gcp.apps.googleusercontent.com';
   const [role,setRole]=useState(null);
   const[showModal,setShowModal]=useState(false);
+  const[showUploadModal,setShowUploadModal]=useState(false);
 
   function checKForData(data){
     fetch('http://localhost:3790/?email='+data.email)
     .then(response=>response.json())
-    .then((data)=>
+    .then((dat)=>
       {
-        console.log(data);
-        if(data.result){
+        console.log(dat);
+        if(dat.result){
           setShowModal(false);
-          document.cookie="user="+data.email+" ;";
-          document.cookie="role="+data.role+" ;";
+          document.cookie="user="+dat.email+" ;";
+          document.cookie="role="+dat.role+" ;";
           window.location.href = "http://localhost:3000";
         }
         else{
@@ -109,13 +111,25 @@ export default function Home(){
   return(
       <>
         <UserContextEmail.Provider value={user}>
-          {user ==='' && <Button className='btn btn-primary' onClick={signIn}>SignUp</Button>}
-          {user==='' && <Button onClick={signIn}>SignIn</Button>}
-          {user!=='' && <Button onClick={signOut}>SignOut</Button>}
+          <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+            <Container>
+              <Navbar.Brand href="#home">QPFinder</Navbar.Brand>
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+              <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav className="me-auto">
+                </Nav>
+                <Nav>
+                  {user ==='' && <Nav.Link onClick={signIn}>SignUp</Nav.Link>}
+                  {user==='' && <Nav.Link onClick={signIn}>SignIn</Nav.Link>}
+                  {user!=='' && <Nav.Link onClick={signOut}>SignOut</Nav.Link>}
+                  {user!=='' && <Nav.Link onClick={setShowUploadModal}>Upload</Nav.Link>}
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
           {showModal && <SignUpModal/>}
-          {user!=='' && <Upload/>}
+          {showUploadModal && <Upload/>}
           <Data/>
-
         </UserContextEmail.Provider>
       </>
   )

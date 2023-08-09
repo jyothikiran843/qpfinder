@@ -23,6 +23,7 @@ export default function Upload(){
         formData.append('file', document.getElementById('file_uploaded').files[0]);
         formData.append('uname',uname);
         formData.append('role',role);
+        formData.append('verified',(role==='faculty' || role==='admin')? 1 : 0)
 
         fetch('http://127.0.0.1:3790/upload', {
         method: 'POST',
