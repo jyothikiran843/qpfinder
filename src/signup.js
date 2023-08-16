@@ -1,3 +1,4 @@
+import { bake_cookie, read_cookie, delete_cookie } from 'sfcookies';
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
@@ -10,21 +11,15 @@ export default function SignUpModal(){
     const [uname,setUname]=useState('');
     const [userType,setUserType]=useState('student');
     const [organizationName,setOrganizationName]=useState('');
+    const [branch,setBranch]=useState('');
 
     function checkBoxed(e){
         if(e.target.checked){
-            var coo=document.cookie;
-            const keyValuePairs = coo.split(';');
-            const userKeyValuePair = keyValuePairs.find((pair) => pair.trim().startsWith('user='));
-            const roleKeyValuePair = keyValuePairs.find((pair) => pair.trim().startsWith('role='));
-            if (userKeyValuePair) {
-              const userValue = userKeyValuePair.split('=')[1].trim();
-              const roleValue = roleKeyValuePair.split('=')[1].trim();
-              setUname(userValue);
-              setUserType(roleValue);
+            if(read_cookie('email').length>0){
+                setUname(read_cookie('email'));
             }
-            else {
-              setUname('');
+            else{
+                setUname('');
             }
         }
         else{
@@ -43,6 +38,7 @@ export default function SignUpModal(){
         body: JSON.stringify({
             uname: uname,
             role: userType,
+            branch: branch,
             organization_name:organizationName,
             email:uname,
         })
@@ -54,8 +50,11 @@ export default function SignUpModal(){
                 alert('Username Not Available');
             }
             else if(data.result){
-                document.cookie="user="+uname+" ;";
-                document.cookie="role="+userType+" ;";
+                bake_cookie('user',uname);
+                bake_cookie('role',userType);
+                bake_cookie('organization',organizationName);
+                bake_cookie('verified',0);
+                bake_cookie('branch',branch);
                 alert("Successfully Updated Your details");
                 setShow(false);
             }
@@ -94,6 +93,18 @@ export default function SignUpModal(){
                                 <option value="student">Student</option>
                                 <option value="faculty">Faculty</option>
                                 <option value="aspirant">Aspirant</option>
+                            </Form.Control>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicUserType">
+                            <Form.Label>Branch</Form.Label>
+                            <Form.Control as="select" value={branch} onChange={(e) => setBranch(e.target.value)}>
+                                <option value="all">all</option>
+                                <option value="cse">CSE</option>
+                                <option value="ece">ECE</option>
+                                <option value="eee">EEE</option>
+                                <option value="cv">Civil</option>
+                                <option value="mech">Mechanical</option>
                             </Form.Control>
                         </Form.Group>
 

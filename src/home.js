@@ -1,3 +1,4 @@
+import { bake_cookie, read_cookie, delete_cookie } from 'sfcookies';
 import { useState,useEffect,createContext } from "react";
 import { Button } from "react-bootstrap";
 import SignUpModal from "./signup";
@@ -12,44 +13,11 @@ export default function Home(){
   const [access_token, setAccessToken] = useState(false);
   const client_id = '297636216905-t14s0edbqojfp5lph7g9vtq2m01l7gcp.apps.googleusercontent.com';
   const [role,setRole]=useState(null);
+  const [uname,setUname]=useState('');
+  const [verified,setVerified]=useState(0);
   const[showModal,setShowModal]=useState(false);
-  const[showUploadModal,setShowUploadModal]=useState(false);
+  const[showUploadModal,setShowUploadModal]=useState(true);
 
-  function checKForData(data){
-    fetch('http://localhost:3790/?email='+data.email)
-    .then(response=>response.json())
-    .then((dat)=>
-      {
-        console.log(dat);
-        if(dat.result){
-          setShowModal(false);
-          document.cookie="user="+dat.email+" ;";
-          document.cookie="role="+dat.role+" ;";
-          window.location.href = "http://localhost:3000";
-        }
-        else{
-          setShowModal(true);
-        }
-      
-      })
-    .catch(error=>{
-      console.log(error);
-      alert('We cannot save your data to our database');
-    });
-  }
-
-  function checkForCookie() {
-      var cook = document.cookie;
-      if(cook.indexOf('user') !== -1 ) {
-        // && cook.indexOf('role')!==-1
-        setUser(((cook).split(';')[2]).split('=')[1]);
-        if(cook.indexOf('role')!==-1){
-          setRole(((cook).split(';')[1]).split('=')[1]);
-          return true;
-        }
-      }
-      return false;
-    }
   useEffect(() => {
     if (!checkForCookie()) {
       const params = new URLSearchParams(document.URL);
@@ -63,7 +31,7 @@ export default function Home(){
           .then(data => {
             setUser(data.email);
             console.log(user);
-            document.cookie = "user=" + data.email + ";";
+            bake_cookie('email',data.email);
             checKForData(data);
           }
           )
@@ -76,6 +44,46 @@ export default function Home(){
       }
     }
   },[]);
+
+  function checkForCookie() {
+    if(read_cookie('email').length>0) {
+      setUser(read_cookie('email'));
+      setRole(read_cookie('role'));
+      setVerified(read_cookie('verified'));
+      setUname(read_cookie('user'));
+      return true;
+    }
+    return false;
+  }
+
+
+  function checKForData(data){
+    fetch('http://localhost:3790/?email='+data.email)
+    .then(response=>response.json())
+    .then((dat)=>
+      {
+        console.log(dat);
+        if(dat.result){
+          var data=dat;
+          setShowModal(false);
+          bake_cookie('user',data.result[0]);
+          bake_cookie('email',data.result[1]);
+          bake_cookie('role',data.result[2]);
+          bake_cookie('branch',data.email[3])
+          bake_cookie('verified',data.result[4]);
+          bake_cookie('organization',data.result[5]);
+          window.location.href = "http://localhost:3000";
+        }
+        else{
+          setShowModal(true);
+        }
+      
+      })
+    .catch(error=>{
+      console.log(error);
+      alert('We cannot save your data to our database');
+    });
+  }
 
   function signIn() {
     var oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -102,9 +110,12 @@ export default function Home(){
   }
 
   function signOut() {
-    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    delete_cookie('user');
+    delete_cookie('email');
+    delete_cookie('role');
+    delete_cookie('verified');
     alert('Signed out successfull');
-    setUser(false);
+    setUser('');
     window.location.href = "http://localhost:3000";
   }
   
@@ -122,7 +133,7 @@ export default function Home(){
                   {user ==='' && <Nav.Link onClick={signIn}>SignUp</Nav.Link>}
                   {user==='' && <Nav.Link onClick={signIn}>SignIn</Nav.Link>}
                   {user!=='' && <Nav.Link onClick={signOut}>SignOut</Nav.Link>}
-                  {user!=='' && <Nav.Link onClick={setShowUploadModal}>Upload</Nav.Link>}
+                  {uname!=='' && <Nav.Link onClick={setShowUploadModal}>Upload</Nav.Link>}
                 </Nav>
               </Navbar.Collapse>
             </Container>

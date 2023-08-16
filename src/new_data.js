@@ -12,7 +12,7 @@ export default function Data(){
     .then(dat => {
         if(dat.values){
             setData(dat);
-            console.log(dat);
+            // console.log(dat);
             setLoaded(true);
             // setError(false);
             error=false;

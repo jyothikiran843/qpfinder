@@ -11,14 +11,11 @@ export default function DisplayData({ldata}){
     const search_text=['Search By Institute','Search By Year','Search By Subject','Search By Type','Search By TIme','Search By Sem','Search By File','Search By User','Search By Role','Search By Verified']
 
     function checkForFilter(row) {
-      console.log(filters);
-      console.log(row);
   
       for (let i = 0; i < filters.length; i++) {
           if (row[i] === filters[i] || filters[i] === 'all') {
               continue;
           } else {
-              console.log('yesss');
               return 'none';
           }
       }
@@ -37,7 +34,7 @@ export default function DisplayData({ldata}){
         setSelectedDriveId('');
         setPreviewModalShow(false);
     };
-    console.log(data);
+    // console.log(data);
 
     function downloadFile(driveId){
         const downloadUrl = `https://drive.google.com/uc?id=${driveId}`;
@@ -47,7 +44,7 @@ export default function DisplayData({ldata}){
 
     function filterApplied(ind){
       const filval=document.getElementById('hifi'+ind).value;
-      console.log(filval);
+      // console.log(filval);
       setFilters(filters=>filters.map((val,index)=>{
         if(index==ind){
           return filval;

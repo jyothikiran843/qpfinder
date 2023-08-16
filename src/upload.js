@@ -1,3 +1,4 @@
+import { bake_cookie, read_cookie, delete_cookie } from 'sfcookies';
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form,Button } from "react-bootstrap";
@@ -10,8 +11,8 @@ export default function Upload(){
     const [type,setType]=useState('all');
     // const [time,setTime]=useState('');
     const [sem,setSem]=useState('all');
-    var uname=((document.cookie).split(';')[0]).split('=')[1];
-    var role=((document.cookie).split(';')[1]).split('=')[1];
+    var uname=read_cookie('user');
+    var role=read_cookie('role');
 
     function submitData(){
         const formData = new FormData();
