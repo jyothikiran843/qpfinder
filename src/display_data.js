@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { read_cookie } from 'sfcookies';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Modal } from 'react-bootstrap';
 import { saveAs } from 'file-saver';
 
@@ -8,7 +9,36 @@ export default function DisplayData({ldata}){
     const [selectedDriveId, setSelectedDriveId] = useState('');
     const [selectedDriveData,setSelectedDriveData]=useState('');
     const [filters, setFilters] = useState(['all','all','all','all','all','all','all','all','all','all']);
-    const search_text=['Search By Institute','Search By Year','Search By Subject','Search By Type','Search By TIme','Search By Sem','Search By File','Search By User','Search By Role','Search By Verified']
+    // const [branch,setBranch]=useState(null);
+    // const [org,setOrg]=useState(null);
+    const search_text=['Search By Institute','Search By Year','Search By Subject','Search By Type','Search By TIme','Search By Sem','Search By File','Search By User','Search By Role','Search By Verified','Search By Branch']
+
+    const customSort = (a, b) => {
+      var branch=read_cookie('branch');
+      console.log(a[10],branch);
+      if (a[10] === branch && b[10] !== branch) {
+        return -1;
+      } else if (a[10] !== branch && b[10] === branch) {
+        return 1;
+      }
+      return a[10].localeCompare(b[10]);
+    };
+    useEffect(()=>{
+      if(checkForSort){
+        const sortedData = [...data];
+        sortedData.sort(customSort);
+        setData(sortedData);
+      }
+    },[]);
+
+    function checkForSort(){
+      if(read_cookie('branch').length>0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
 
     function checkForFilter(row) {
   
@@ -61,7 +91,7 @@ export default function DisplayData({ldata}){
       <>
         <div>
             {data[0].map((arr,ind)=>{
-              if((JSON.stringify([0,1,2,3,4,5,7,9])).indexOf(ind)!=-1){
+              if((JSON.stringify([0,1,2,3,4,5,7,9,10])).indexOf(ind)!=-1){
                 return(
                   <>
                     {/* <div className='container-fluid row'>
@@ -92,11 +122,13 @@ export default function DisplayData({ldata}){
           <div className="container-fluid row">
             {data.map((row, index) => (
               <div className='col-md-3'>
+                {console.log(row)}
                 <Card style={{width:'100%',display:checkForFilter(row)}} className=' ' key={index}>
                     <Card.Img varient='top' src={`https://drive.google.com/thumbnail?id=${row[6]}`} />
                   <Card.Body className='text-center'>
                     <Card.Title> {row[0]}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">{row[1]}</Card.Subtitle>
+                    <Card.Text>Branch: <b>{row[10]}</b></Card.Text>
                     <Card.Text>Year Conducted: <b>{row[2]}</b></Card.Text>
                     <Card.Text>Subject: <b>{row[3]}</b></Card.Text>
                     <Card.Text>Type: <b>{row[4]}</b></Card.Text>

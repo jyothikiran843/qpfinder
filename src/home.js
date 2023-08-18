@@ -12,11 +12,11 @@ export default function Home(){
   const [user,setUser]=useState('');
   const [access_token, setAccessToken] = useState(false);
   const client_id = '297636216905-t14s0edbqojfp5lph7g9vtq2m01l7gcp.apps.googleusercontent.com';
-  const [role,setRole]=useState(null);
+  const [role,setRole]=useState('');
   const [uname,setUname]=useState('');
   const [verified,setVerified]=useState(0);
   const[showModal,setShowModal]=useState(false);
-  const[showUploadModal,setShowUploadModal]=useState(true);
+  const[showUploadModal,setShowUploadModal]=useState(false);
 
   useEffect(() => {
     if (!checkForCookie()) {
@@ -33,6 +33,7 @@ export default function Home(){
             console.log(user);
             bake_cookie('email',data.email);
             checKForData(data);
+            setAccessToken('');
           }
           )
           .catch(error =>
@@ -69,7 +70,7 @@ export default function Home(){
           bake_cookie('user',data.result[0]);
           bake_cookie('email',data.result[1]);
           bake_cookie('role',data.result[2]);
-          bake_cookie('branch',data.email[3])
+          bake_cookie('branch',data.result[3])
           bake_cookie('verified',data.result[4]);
           bake_cookie('organization',data.result[5]);
           window.location.href = "http://localhost:3000";
@@ -133,7 +134,7 @@ export default function Home(){
                   {user ==='' && <Nav.Link onClick={signIn}>SignUp</Nav.Link>}
                   {user==='' && <Nav.Link onClick={signIn}>SignIn</Nav.Link>}
                   {user!=='' && <Nav.Link onClick={signOut}>SignOut</Nav.Link>}
-                  {uname!=='' && <Nav.Link onClick={setShowUploadModal}>Upload</Nav.Link>}
+                  {role!=='' && <Nav.Link onClick={setShowUploadModal}>Upload</Nav.Link>}
                 </Nav>
               </Navbar.Collapse>
             </Container>

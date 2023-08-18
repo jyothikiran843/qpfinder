@@ -56,6 +56,7 @@ export default function SignUpModal(){
                 bake_cookie('verified',0);
                 bake_cookie('branch',branch);
                 alert("Successfully Updated Your details");
+                window.location.href = "http://localhost:3000";
                 setShow(false);
             }
             else{

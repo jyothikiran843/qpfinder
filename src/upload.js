@@ -13,6 +13,7 @@ export default function Upload(){
     const [sem,setSem]=useState('all');
     var uname=read_cookie('user');
     var role=read_cookie('role');
+    const [branch,setBranch]=useState('all');
 
     function submitData(){
         const formData = new FormData();
@@ -24,7 +25,8 @@ export default function Upload(){
         formData.append('file', document.getElementById('file_uploaded').files[0]);
         formData.append('uname',uname);
         formData.append('role',role);
-        formData.append('verified',(role==='faculty' || role==='admin')? 1 : 0)
+        formData.append('verified',(role==='faculty' || role==='admin')? 1 : 0);
+        formData.append('branch',branch);
 
         fetch('http://127.0.0.1:3790/upload', {
         method: 'POST',
@@ -89,6 +91,18 @@ export default function Upload(){
                                 <option value='all'>All</option>
                                 <option value='1'>Sem-1</option>
                                 <option value='2'>Sem-2</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" >
+                            <Form.Label>Branch</Form.Label>
+                            <Form.Select as="select" placeholder="Other" value={branch} onChange={(e)=>setBranch(e.target.value)}>
+                                <option value="all">all</option>
+                                <option value="cse">CSE</option>
+                                <option value="ece">ECE</option>
+                                <option value="eee">EEE</option>
+                                <option value="cv">Civil</option>
+                                <option value="mech">Mechanical</option>
                             </Form.Select>
                         </Form.Group>
 
