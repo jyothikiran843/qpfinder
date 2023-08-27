@@ -10,20 +10,21 @@ const UserContextEmail=createContext();
 
 export default function Home(){
   const [user,setUser]=useState('');
-  const [access_token, setAccessToken] = useState(false);
+  // const [access_token, setAccessToken] = useState(false);
   const client_id = '297636216905-t14s0edbqojfp5lph7g9vtq2m01l7gcp.apps.googleusercontent.com';
   const [role,setRole]=useState('');
   const [uname,setUname]=useState('');
   const [verified,setVerified]=useState(0);
   const[showModal,setShowModal]=useState(false);
   const[showUploadModal,setShowUploadModal]=useState(false);
+  var access_token=false;
 
   useEffect(() => {
     if (!checkForCookie()) {
-      const params = new URLSearchParams(document.URL);
-      const access_token = params.get('access_token');
-      if (access_token) {
-        setAccessToken(access_token);
+      var params = new URLSearchParams(document.URL);
+      var at = params.get('access_token');
+      if (at) {
+        access_token=at;
         fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + access_token)
           .then(response =>
             response.json()
@@ -33,7 +34,7 @@ export default function Home(){
             console.log(user);
             bake_cookie('email',data.email);
             checKForData(data);
-            setAccessToken('');
+            access_token=false;
           }
           )
           .catch(error =>
@@ -41,7 +42,7 @@ export default function Home(){
           )
       }
       else {
-        setAccessToken(false);
+        access_token=false;
       }
     }
   },[]);
@@ -59,7 +60,7 @@ export default function Home(){
 
 
   function checKForData(data){
-    fetch('http://localhost:3790/?email='+data.email)
+    fetch('https://qpfinder.onrender.com/?email='+data.email)
     .then(response=>response.json())
     .then((dat)=>
       {
@@ -73,7 +74,7 @@ export default function Home(){
           bake_cookie('branch',data.result[3])
           bake_cookie('verified',data.result[4]);
           bake_cookie('organization',data.result[5]);
-          window.location.href = "http://localhost:3000";
+          window.location.reload();
         }
         else{
           setShowModal(true);
@@ -115,7 +116,15 @@ export default function Home(){
     delete_cookie('email');
     delete_cookie('role');
     delete_cookie('verified');
+    delete_cookie('branch');
+    delete_cookie('organization');
     alert('Signed out successfull');
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    access_token=false;
     setUser('');
     window.location.href = "http://localhost:3000";
   }

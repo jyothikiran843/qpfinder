@@ -29,7 +29,7 @@ export default function SignUpModal(){
 
     function addData(e){
         e.preventDefault();
-        fetch("http://127.0.0.1:3790/submit", {
+        fetch("https://qpfinder.onrender.com/submit", {
         method: "post",
         headers: {
             'Accept': 'application/json',

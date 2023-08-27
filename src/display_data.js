@@ -124,17 +124,17 @@ export default function DisplayData({ldata}){
               <div className='col-md-3'>
                 {console.log(row)}
                 <Card style={{width:'100%',display:checkForFilter(row)}} className=' ' key={index}>
-                    <Card.Img varient='top' src={`https://drive.google.com/thumbnail?id=${row[6]}`} />
+                    <Card.Img className='card-img-top' varient='top' src={`https://drive.google.com/thumbnail?id=${row[6]}`} />
                   <Card.Body className='text-center'>
                     <Card.Title> {row[0]}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">{row[1]}</Card.Subtitle>
                     <Card.Text>Branch: <b>{row[10]}</b></Card.Text>
-                    <Card.Text>Year Conducted: <b>{row[2]}</b></Card.Text>
-                    <Card.Text>Subject: <b>{row[3]}</b></Card.Text>
-                    <Card.Text>Type: <b>{row[4]}</b></Card.Text>
-                    <Card.Text>Time Uploaded: <b>{row[5]}</b></Card.Text>
+                    <Card.Text>Year: <b>{row[1]}</b></Card.Text>
+                    <Card.Text>Subject: <b>{row[2]}</b></Card.Text>
+                    <Card.Text>Type: <b>{row[3] == '1' ? 'Curiculum' : 'Competetive'}</b></Card.Text>
+                    <Card.Text>Time Uploaded: <b>{row[4]}</b></Card.Text>
                     <Card.Text>By: <b>{row[7]}</b></Card.Text>
-                    <Card.Text>Verified:<b>{row[9]}</b></Card.Text>
+                    <Card.Text>Verified:<b>{row[9]==1 ? 'Verified' : 'Not Verified'}</b></Card.Text>
                     <Button variant="primary" onClick={() => openPreviewModal(row[6],row)}>
                       Preview
                     </Button>

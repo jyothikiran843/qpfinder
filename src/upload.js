@@ -28,7 +28,7 @@ export default function Upload(){
         formData.append('verified',(role==='faculty' || role==='admin')? 1 : 0);
         formData.append('branch',branch);
 
-        fetch('http://127.0.0.1:3790/upload', {
+        fetch('https://qpfinder.onrender.com/upload', {
         method: 'POST',
         body: formData
         })
@@ -117,7 +117,7 @@ export default function Upload(){
                             <Form.Control id="file_uploaded" required type="file" accept="image/*, .pdf" size="lg"></Form.Control>
                         </Form.Group>
 
-                        <Button variant="primary" type="submit" onClick={submitData}>
+                        <Button variant="primary" type="button" onClick={submitData}>
                             Submit
                         </Button>
                         </Form>
